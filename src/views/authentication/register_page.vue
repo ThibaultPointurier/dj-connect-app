@@ -116,7 +116,6 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 
 const formStep1 = ref({
   email: '',
@@ -146,6 +145,7 @@ async function submitFirstStep() {
   //   errors.value.email = "Veuillez saisir un email";
   //   return;
   // }
+  step.value = 2
 }
 
 async function submitSecondStep() {
@@ -167,6 +167,8 @@ async function submitSecondStep() {
           phone: formStep2.value.phone,
         }),
   }
+
+  console.log(payload)
 }
 </script>
 

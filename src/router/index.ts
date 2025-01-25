@@ -1,9 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import loginPage from '../views/authentication/login_view.vue'
-import registerPage from '../views/authentication/register_view.vue'
-import baseLayout from '../layouts/base_layout.vue'
-import dashboardLayout from '@/layouts/dashboard_layout.vue'
+import baseLayout from '../components/layouts/base_layout.vue'
+import dashboardLayout from '@/components/layouts/dashboard_layout.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,7 +8,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView,
+      component: () => import('../views/home_page.vue'),
       meta: {
         layout: baseLayout,
       },
@@ -19,7 +16,7 @@ const router = createRouter({
     {
       path: '/authentication/login',
       name: 'login',
-      component: loginPage,
+      component: () => import('../views/authentication/login_page.vue'),
       meta: {
         layout: baseLayout,
       },
@@ -27,15 +24,7 @@ const router = createRouter({
     {
       path: '/authentication/register',
       name: 'register',
-      component: registerPage,
-      meta: {
-        layout: baseLayout,
-      },
-    },
-    {
-      path: '/authentication/register',
-      name: 'register',
-      component: registerPage,
+      component: () => import('../views/authentication/register_page.vue'),
       meta: {
         layout: baseLayout,
       },
@@ -43,15 +32,23 @@ const router = createRouter({
     {
       path: '/dashboard',
       name: 'dashboard',
-      component: () => import('../views/dashboard/dashboard_view.vue'),
+      component: () => import('../views/dashboard/dashboard_page.vue'),
       meta: {
         layout: dashboardLayout,
       },
     },
     {
-      path: '/conv',
-      name: 'convo',
-      component: () => import('../views/messages/conversation_view.vue'),
+      path: '/messages',
+      name: 'messages',
+      component: () => import('../views/messages/messages_page.vue'),
+      meta: {
+        layout: dashboardLayout,
+      },
+    },
+    {
+      path: '/profil',
+      name: 'profil',
+      component: () => import('../views/profile/profil_page.vue'),
       meta: {
         layout: dashboardLayout,
       },
