@@ -1,0 +1,68 @@
+name: Build Cordova Android
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Récupération du code source
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # 2) Installer Node.js (pour Vite et Cordova)
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 3) Installer Java et SDK Android
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 11
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v2
+        with:
+          api-level: 33
+          build-tools: '33.0.0'
+
+      # 4) Installer Cordova en global
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      # 5) Installer les dépendances de votre projet (Vue + Cordova)
+      - name: Install Dependencies
+        run: npm install
+
+      # 6) Build Vue => les fichiers sont générés dans cordova-app/www
+      - name: Build Vue
+        run: npm run build
+
+      # 7) Ajouter la plateforme Android si besoin
+      #    (si vous ne versionnez pas platforms/ ou si vous avez besoin de la régénérer)
+      - name: Cordova Platform Add Android
+        run: |
+          cd cordova-app
+          cordova platform add android
+
+      # 8) Construire l'APK Android en mode release
+      - name: Cordova Build (Android)
+        run: |
+          cd cordova-app
+          cordova build android --release
+
+      # 9) Enregistrer l’APK (release) dans les artifacts
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk
+          path: |
+            cordova-app/platforms/android/app/build/outputs/apk/release/*.apk
