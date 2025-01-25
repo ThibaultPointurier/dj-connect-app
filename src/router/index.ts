@@ -13,48 +13,48 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: {
-        layout: baseLayout
-      }
+        layout: baseLayout,
+      },
     },
     {
       path: '/authentication/login',
       name: 'login',
       component: loginPage,
       meta: {
-        layout: baseLayout
-      }
+        layout: baseLayout,
+      },
     },
     {
       path: '/authentication/register',
       name: 'register',
       component: registerPage,
       meta: {
-        layout: baseLayout
-      }
+        layout: baseLayout,
+      },
     },
     {
       path: '/authentication/register',
       name: 'register',
       component: registerPage,
       meta: {
-        layout: baseLayout
-      }
+        layout: baseLayout,
+      },
     },
     {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/dashboard/dashboard_view.vue'),
       meta: {
-        layout: dashboardLayout
-      }
+        layout: dashboardLayout,
+      },
     },
     {
       path: '/conv',
       name: 'convo',
       component: () => import('../views/messages/conversation_view.vue'),
       meta: {
-        layout: dashboardLayout
-      }
+        layout: dashboardLayout,
+      },
     },
   ],
 })

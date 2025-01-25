@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import {RouterView, useRoute} from 'vue-router'
-import {computed} from "vue";
-import BaseLayout from "@/layouts/base_layout.vue";
+import { RouterView, useRoute } from 'vue-router'
+import { computed } from 'vue'
+import BaseLayout from '@/layouts/base_layout.vue'
 const route = useRoute()
 
 const layout = computed(() => {
