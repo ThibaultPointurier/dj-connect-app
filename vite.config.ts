@@ -13,7 +13,7 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    outDir: './cordova/www',
+    outDir: './cordova-app/www',
     emptyOutDir: true,
   },
   resolve: {
