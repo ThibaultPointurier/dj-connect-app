@@ -55,6 +55,7 @@ const errors = reactive({
 const errorMessage = ref('');
 
 async function submitLogin() {
+  router.push('/dashboard')
   errors.email = '';
   errors.password = '';
   errorMessage.value = '';
