@@ -1,179 +1,120 @@
 <template>
-  <div class="w-12/12 bg-white shadow-md rounded-lg p-6">
-    <h2 class="text-2xl font-bold text-center mb-6 text-slate-600">Inscription</h2>
+  <div class="min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
+      <h2 class="text-2xl font-bold text-center mb-6 text-[#1E1E1E]">Inscription</h2>
 
-    <!-- Étape 1 -->
-    <div v-if="step === 1">
       <form @submit.prevent="submitFirstStep">
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+          <label for="email" class="block text-sm font-medium text-[#1E1E1E]">Email</label>
           <input
-            v-model="formStep1.email"
+            v-model="form.email"
             type="email"
             id="email"
-            class="mt-1 block w-full px-3 py-2 border rounded-md text-slate-600 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-full px-3 py-2 border rounded-md text-[#1E1E1E] border-[#D9D9D9] focus:outline-none focus:ring-[#0077B6] focus:border-[#0077B6]"
           />
+          <p v-if="errors.email" class="text-red-500 text-sm mt-1">{{ errors.email }}</p>
         </div>
 
         <div class="mb-4">
-          <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe</label>
+          <label for="password" class="block text-sm font-medium text-[#1E1E1E]">Mot de passe</label>
           <input
-            v-model="formStep1.password"
+            v-model="form.password"
             type="password"
             id="password"
-            class="mt-1 block w-full px-3 py-2 border rounded-md text-slate-600 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            class="mt-1 block w-full px-3 py-2 border rounded-md text-[#1E1E1E] border-[#D9D9D9] focus:outline-none focus:ring-[#0077B6] focus:border-[#0077B6]"
           />
+          <p v-if="errors.password" class="text-red-500 text-sm mt-1">{{ errors.password }}</p>
         </div>
 
         <div class="mb-4">
-          <label for="role" class="block text-sm font-medium text-gray-700">Rôle</label>
+          <label for="password_confirmation" class="block text-sm font-medium text-[#1E1E1E]">Confirmez le mot de passe</label>
+          <input
+            v-model="form.password_confirmation"
+            type="password"
+            id="password_confirmation"
+            class="mt-1 block w-full px-3 py-2 border rounded-md text-[#1E1E1E] border-[#D9D9D9] focus:outline-none focus:ring-[#0077B6] focus:border-[#0077B6]"
+          />
+          <p v-if="errors.password_confirmation" class="text-red-500 text-sm mt-1">{{ errors.password_confirmation }}</p>
+        </div>
+
+        <div class="mb-4">
+          <label for="role" class="block text-sm font-medium text-[#1E1E1E]">Rôle</label>
           <select
             id="role"
-            v-model="formStep1.role"
-            class="mt-1 block w-full px-3 py-2 border rounded-md text-slate-600 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+            v-model="form.role"
+            class="mt-1 block w-full px-3 py-2 border rounded-md text-[#1E1E1E] border-[#D9D9D9] focus:outline-none focus:ring-[#0077B6] focus:border-[#0077B6]"
           >
             <option value="dj">DJ</option>
             <option value="organisateur">Organisateur</option>
           </select>
-          <p class="text-red-500 text-sm mt-1"></p>
         </div>
 
         <button
           type="submit"
-          class="w-full bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition"
+          class="w-full bg-[#3D1E6D] text-white py-2 px-4 rounded-lg hover:bg-[#0077B6] transition"
         >
-          Suivant
+          Inscription
         </button>
       </form>
     </div>
-
-    <!-- Étape 2 -->
-    <div v-else-if="step === 2">
-      <form @submit.prevent="submitSecondStep">
-        <!-- Champs spécifiques selon le rôle -->
-        <div v-if="formStep1.role === 'dj'">
-          <div class="mb-4">
-            <label for="stageName" class="block text-sm font-medium text-gray-700"
-              >Nom de scène</label
-            >
-            <input
-              v-model="formStep2.stageName"
-              type="text"
-              id="stageName"
-              class="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="musicStyle" class="block text-sm font-medium text-gray-700"
-              >Style musical</label
-            >
-            <input
-              v-model="formStep2.musicStyle"
-              type="text"
-              id="musicStyle"
-              class="mt-1 block w-full px-3 py-2 border rounded-md text-slate-600 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-        </div>
-
-        <div v-else>
-          <div class="mb-4">
-            <label for="companyName" class="block text-sm font-medium text-gray-700"
-              >Nom de l'entreprise</label
-            >
-            <input
-              v-model="formStep2.companyName"
-              type="text"
-              id="companyName"
-              class="mt-1 block w-full px-3 py-2 border rounded-md text-slate-600 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-
-          <div class="mb-4">
-            <label for="phone" class="block text-sm font-medium text-gray-700">Téléphone</label>
-            <input
-              v-model="formStep2.phone"
-              type="text"
-              id="phone"
-              class="mt-1 block w-full px-3 py-2 border rounded-md text-slate-600 border-slate-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          class="w-full bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600 transition"
-        >
-          S'inscrire
-        </button>
-      </form>
-    </div>
-
-    <p v-if="errorMessage" class="text-red-500 text-center text-sm mt-4">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref } from 'vue';
+import axios, { AxiosError } from 'axios';
+import { useRouter } from 'vue-router';
 
-const formStep1 = ref({
+interface FormStep1 {
+  email: string;
+  password: string;
+  password_confirmation: string;
+  role: string;
+}
+
+interface ApiError {
+  message: string;
+  rule: string;
+  field: string;
+}
+
+interface ApiErrorResponse {
+  errors: ApiError[];
+}
+
+const form = ref<FormStep1>({
   email: '',
   password: '',
-  role: 'dj', // Par défaut
-})
+  password_confirmation: '',
+  role: 'dj',
+});
 
-const formStep2 = ref({
-  stageName: '',
-  musicStyle: '',
-  companyName: '',
-  phone: '',
-})
+const errors = ref<{ [key: string]: string }>({});
 
-const step = ref(1)
-
-const errors = ref<unknown>({})
-
-const errorMessage = ref('')
+const router = useRouter();
 
 async function submitFirstStep() {
-  errors.value = {}
-  errorMessage.value = ''
+  errors.value = {}; // Reset errors
+  try {
+    await axios.post('http://localhost:3333/authentication/register', {
+      email: form.value.email,
+      password: form.value.password,
+      password_confirmation: form.value.password_confirmation,
+      role: form.value.role,
+    });
+    await router.push('/authentication/login');
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.data) {
+      const apiErrorResponse = error.response.data as ApiErrorResponse;
 
-  // Vérification de base côté front (optionnel)
-  // if (!formStep1.value.email) {
-  //   errors.value.email = "Veuillez saisir un email";
-  //   return;
-  // }
-  step.value = 2
-}
-
-async function submitSecondStep() {
-  errors.value = {}
-  errorMessage.value = ''
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const payload = {
-    email: formStep1.value.email,
-    password: formStep1.value.password,
-    role: formStep1.value.role,
-    ...(formStep1.value.role === 'dj'
-      ? {
-          stageName: formStep2.value.stageName,
-          musicStyle: formStep2.value.musicStyle,
+      if (Array.isArray(apiErrorResponse.errors)) {
+        for (const err of apiErrorResponse.errors) {
+          errors.value[err.field] = err.message; // Map errors to fields
         }
-      : {
-          companyName: formStep2.value.companyName,
-          phone: formStep2.value.phone,
-        }),
+      }
+    } else {
+      console.error('Unexpected error:', error);
+    }
   }
-
-  console.log(payload)
 }
 </script>
-
-<style scoped>
-body {
-  background-color: #f9fafb;
-}
-</style>

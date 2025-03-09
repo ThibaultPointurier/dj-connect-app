@@ -1,9 +1,5 @@
 <template>
   <div class="min-h-screen flex flex-col items-center justify-center">
-    <!--
-      main -> vous pouvez ajouter `relative` si le bouton retour (absolute)
-      doit se positionner par rapport au bloc et non par rapport à l'écran
-    -->
     <main class="w-11/12 max-w-md relative">
       <router-link
         v-if="showBackButton"
@@ -11,7 +7,6 @@
         type="button"
         to="/"
       >
-        <!-- Icône "chevron" de retour -->
         <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none">
           <path
             d="M6 12H18M6 12L11 7M6 12L11 17"
@@ -23,11 +18,9 @@
         </svg>
       </router-link>
 
-      <!-- Votre contenu -->
       <slot />
     </main>
 
-    <!-- Footer éventuel -->
     <footer></footer>
   </div>
 </template>
@@ -35,11 +28,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useAuthStore } from '@/stores/auth_store'
 
 const route = useRoute()
+const authStore = useAuthStore()
 
 const showBackButton = computed(() => {
-  // Afficher le bouton de retour si on n'est pas sur la racine
-  return route.path !== '/'
+  return route.name !== 'home'
 })
 </script>
