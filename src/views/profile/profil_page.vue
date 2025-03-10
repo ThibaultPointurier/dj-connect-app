@@ -6,19 +6,32 @@
 
     <template v-else-if="user">
       <!-- En-tête avec navigation -->
-      <div class="bg-white shadow-sm">
+      <div class="bg-white border-b border-gray-100">
         <div class="max-w-4xl mx-auto px-4">
-          <div class="flex justify-between items-center h-16">
-            <div class="relative flex-1 flex justify-center">
-              <div class="relative pb-3 w-40 text-center">
-                <h1 class="text-lg font-medium text-[#3D1E6D]">À propos de vous</h1>
-                <div class="absolute -bottom-[1px] left-0 w-full h-0.5 bg-[#3D1E6D]"></div>
-              </div>
-            </div>
-            <div class="relative flex-1 flex justify-center">
-              <div class="relative pb-3 w-40 text-center">
-                <h1 class="text-lg text-gray-400 cursor-pointer hover:text-[#3D1E6D] transition-colors">Compte</h1>
-              </div>
+          <div class="flex items-center justify-center h-16">
+            <div class="flex space-x-8">
+              <button 
+                @click="activeTab = 'about'"
+                class="relative py-4 text-sm font-medium transition-colors"
+                :class="activeTab === 'about' ? 'text-[#3D1E6D]' : 'text-gray-500 hover:text-[#3D1E6D]'"
+              >
+                À propos de vous
+                <div 
+                  class="absolute bottom-0 left-0 w-full h-0.5 bg-[#3D1E6D] transition-transform duration-200"
+                  :class="activeTab === 'about' ? 'scale-x-100' : 'scale-x-0'"
+                ></div>
+              </button>
+              <button 
+                @click="activeTab = 'account'"
+                class="relative py-4 text-sm font-medium transition-colors"
+                :class="activeTab === 'account' ? 'text-[#3D1E6D]' : 'text-gray-500 hover:text-[#3D1E6D]'"
+              >
+                Compte
+                <div 
+                  class="absolute bottom-0 left-0 w-full h-0.5 bg-[#3D1E6D] transition-transform duration-200"
+                  :class="activeTab === 'account' ? 'scale-x-100' : 'scale-x-0'"
+                ></div>
+              </button>
             </div>
           </div>
         </div>
@@ -192,6 +205,7 @@ const defaultProfilePhoto = '/default-avatar.png'
 const showEditPhotoModal = ref(false)
 const showEditInfoModal = ref(false)
 const isLoading = ref(true)
+const activeTab = ref('about')
 
 const fetchUserData = async () => {
   isLoading.value = true

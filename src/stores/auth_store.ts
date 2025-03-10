@@ -12,12 +12,14 @@ interface User {
   isEmailVerified?: boolean
   dj?: {
     id: number
+    bio: string
     stageName: string
     genres: string
     profilePhoto?: string
   }
   organizer?: {
     id: number
+    bio: string
     companyName: string
     phone: string
     address?: string

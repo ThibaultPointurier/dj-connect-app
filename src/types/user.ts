@@ -29,13 +29,25 @@ export interface User {
   id: number
   email: string
   role: 'dj' | 'organisateur'
-  isIdentityVerified: boolean
-  bio?: string
+  profilePhoto?: string
   status?: string
-  createdAt: string
-  updatedAt: string
-  dj?: DjProfile
-  organizer?: OrganizerProfile
+  isEmailVerified?: boolean
+  dj?: {
+    id: number
+    stageName: string
+    genres: string
+    bio?: string
+    profilePhoto?: string
+  }
+  organizer?: {
+    id: number
+    companyName: string
+    phone: string
+    bio?: string
+    address?: string
+    profilePhoto?: string
+    establishmentType?: string
+  }
 }
 
 export interface ProfileFormData {

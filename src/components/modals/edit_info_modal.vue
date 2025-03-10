@@ -47,8 +47,9 @@
                 <label class="block text-sm font-medium text-gray-700">Style musical</label>
                 <input
                   type="text"
-                  v-model="formData.djProfile!.musicStyle"
+                  v-model="formData.djProfile!.genres"
                   class="mt-1 block w-full border-0 focus:ring-0 text-gray-900 text-sm bg-transparent"
+                  placeholder="Parlez-nous de vous..."
                   required
                 />
               </div>
@@ -149,7 +150,7 @@ const formData = ref<ProfileFormData>({
   status: '',
   djProfile: {
     stageName: '',
-    musicStyle: '',
+    genres: '',
   },
   organizerProfile: {
     companyName: '',
@@ -161,11 +162,11 @@ const formData = ref<ProfileFormData>({
 
 const initializeForm = () => {
   formData.value = {
-    bio: props.user.bio || '',
+    bio: props.user.dj?.bio || props.user.organizer?.bio || '',
     status: props.user.status || '',
     djProfile: props.user.role === 'dj' ? {
       stageName: props.user.dj?.stageName || '',
-      musicStyle: props.user.dj?.musicStyle || '',
+      genres: props.user.dj?.genres || '',
     } : undefined,
     organizerProfile: props.user.role === 'organisateur' ? {
       companyName: props.user.organizer?.companyName || '',
@@ -180,7 +181,7 @@ const handleSubmit = async () => {
   try {
     loading.value = true
     error.value = null
-    await userService.updateProfile(props.user.id, formData.value)
+    await userService.updateProfile(props.user.id.toString(), formData.value)
     emit('update', formData.value)
     emit('close')
   } catch (err) {
