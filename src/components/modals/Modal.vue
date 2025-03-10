@@ -6,7 +6,7 @@
           <!-- Overlay -->
           <Transition name="modal-backdrop">
             <div 
-              class="fixed inset-0 bg-opacity-10 backdrop-blur-sm transition-opacity" 
+              class="fixed inset-0 bg-opacity-10 backdrop-blur-xs transition-opacity" 
               @click="$emit('close')"
               aria-hidden="true"
             />

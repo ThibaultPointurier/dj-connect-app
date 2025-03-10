@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import { API_ENDPOINTS } from '../config/api'
-import { UploadService } from '@/services/upload.service'
 
 interface User {
   id: number
@@ -14,13 +13,15 @@ interface User {
   dj?: {
     id: number
     stageName: string
-    musicStyle: string
+    genres: string
+    profilePhoto?: string
   }
   organizer?: {
     id: number
     companyName: string
     phone: string
     address?: string
+    profilePhoto?: string
     establishmentType?: string
   }
 }

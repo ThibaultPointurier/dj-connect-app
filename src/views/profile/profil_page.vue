@@ -1,164 +1,157 @@
 <template>
-  <div class="w-full min-h-screen bg-white">
-    <!-- Loading state -->
+  <div class="w-full min-h-screen bg-gray-50">
     <div v-if="isLoading" class="flex justify-center items-center h-screen">
-      <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-900"></div>
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3D1E6D]"></div>
     </div>
 
     <template v-else-if="user">
-      <div class="flex justify-between items-center h-14 border-b">
-        <div class="relative flex-1 flex justify-center">
-          <div class="relative pb-3 w-40 text-center">
-            <h1 class="text-lg font-semibold text-[#3D1E6D]">À propos de vous</h1>
-            <div class="absolute -bottom-[1px] left-0 w-full h-0.5 bg-[#3D1E6D]"></div>
-          </div>
-        </div>
-        <div class="relative flex-1 flex justify-center">
-          <div class="relative pb-3 w-40 text-center">
-            <h1 class="text-lg text-[#D9D9D9] cursor-pointer hover:text-[#1E1E1E]">Compte</h1>
+      <!-- En-tête avec navigation -->
+      <div class="bg-white shadow-sm">
+        <div class="max-w-4xl mx-auto px-4">
+          <div class="flex justify-between items-center h-16">
+            <div class="relative flex-1 flex justify-center">
+              <div class="relative pb-3 w-40 text-center">
+                <h1 class="text-lg font-medium text-[#3D1E6D]">À propos de vous</h1>
+                <div class="absolute -bottom-[1px] left-0 w-full h-0.5 bg-[#3D1E6D]"></div>
+              </div>
+            </div>
+            <div class="relative flex-1 flex justify-center">
+              <div class="relative pb-3 w-40 text-center">
+                <h1 class="text-lg text-gray-400 cursor-pointer hover:text-[#3D1E6D] transition-colors">Compte</h1>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="p-4">
-        <!-- Section profil principal -->
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex items-center">
-            <div class="relative">
-              <template v-if="user.profilePhoto">
-                <img
-                  :src="user.profilePhoto"
-                  :alt="'Photo de profil de ' + displayName"
-                  class="w-10 h-10 rounded-full object-cover border-4 border-[#0077B6]"
-                />
-              </template>
-              <template v-else>
-                <AvatarInitials
-                  :name="displayName"
-                  size="lg"
-                  :type="user.role"
-                  class="border-4 border-[#0077B6]"
-                />
-              </template>
-              <div class="absolute bottom-0 right-0 bg-[#0077B6] rounded-full p-1">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
+      <!-- Contenu principal -->
+      <div class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Section profil -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-6">
+              <div class="relative">
+                <template v-if="user.role === 'dj' ? user.dj?.profilePhoto : user.organizer?.profilePhoto">
+                  <img
+                    :src="profilePhotoUrl"
+                    :alt="'Photo de profil de ' + displayName"
+                    class="w-28 h-28 rounded-full object-cover border-4 border-[#3D1E6D] shadow-lg"
+                  />
+                </template>
+                <template v-else>
+                  <AvatarInitials
+                    :name="displayName"
+                    size="lg"
+                    :type="user.role"
+                    class="w-28 h-28 border-4 border-[#3D1E6D] shadow-lg"
+                  />
+                </template>
+                <button @click="openEditPhotoModal" class="absolute bottom-0 right-0 bg-[#3D1E6D] rounded-full p-2 text-white hover:bg-[#2A1650] transition-colors">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                  </svg>
+                </button>
               </div>
-            </div>
-            <div class="ml-4">
-              <h2 class="text-2xl font-bold text-[#3D1E6D]">{{ displayName }}</h2>
-              <div class="flex items-center">
-                <span class="text-[#1E1E1E]">{{ roleLabel }}</span>
-                <span v-if="user.status" class="ml-2 text-[#1E1E1E]">• {{ user.status }}</span>
+              <div>
+                <h2 class="text-2xl font-bold text-[#3D1E6D]">{{ displayName }}</h2>
+                <div class="flex items-center space-x-2 mt-1">
+                  <span class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700">{{ roleLabel }}</span>
+                  <span v-if="user.status" class="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-700">{{ user.status }}</span>
+                </div>
               </div>
             </div>
           </div>
-          <button class="text-gray-400">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+
+          <div class="space-y-4">
+            <button @click="openEditInfoModal" class="w-full flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+              <span class="text-gray-700 font-medium">Modifier les informations personnelles</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Options de modification -->
-        <button @click="openEditPhotoModal" class="w-full text-left text-[#0077B6] text-lg font-medium mb-4">
-          Modifier la photo de profil
-        </button>
-        <button @click="openEditInfoModal" class="w-full text-left text-[#0077B6] text-lg font-medium mb-8">
-          Modifier les informations personnelles
-        </button>
-
-        <!-- Section Profil Vérifié -->
-        <div class="mb-8">
-          <h3 class="text-2xl font-bold text-[#3D1E6D] mb-4">Profil Vérifié</h3>
+        <!-- Section informations vérifiées -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+          <h3 class="text-xl font-bold text-[#3D1E6D] mb-6">Profil Vérifié</h3>
           <div class="space-y-4">
-            <!-- Email vérifié -->
-            <div class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-[#0077B6] flex items-center justify-center mr-3">
+            <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+              <div class="w-10 h-10 rounded-full bg-[#3D1E6D] flex items-center justify-center mr-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
               </div>
-              <span class="text-[#1E1E1E]">{{ user.email }}</span>
+              <span class="text-gray-700">{{ user.email }}</span>
             </div>
 
-            <!-- Téléphone vérifié (pour les organisateurs) -->
-            <div v-if="user.role === 'organisateur' && user.organizer?.phone" class="flex items-center">
-              <div class="w-8 h-8 rounded-full bg-[#0077B6] flex items-center justify-center mr-3">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-              </div>
-              <span class="text-[#1E1E1E]">{{ user.organizer.phone }}</span>
-            </div>
-
-            <!-- Informations spécifiques aux organisateurs -->
             <template v-if="user.role === 'organisateur' && user.organizer">
-              <div class="flex items-center">
-                <div class="w-8 h-8 rounded-full bg-[#0077B6] flex items-center justify-center mr-3">
+              <div v-if="user.organizer.phone" class="flex items-center p-4 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-[#3D1E6D] flex items-center justify-center mr-4">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
                 </div>
-                <span class="text-[#1E1E1E]">Licence commerciale vérifiée</span>
+                <span class="text-gray-700">{{ user.organizer.phone }}</span>
               </div>
-              <div v-if="user.organizer.address" class="flex items-center">
-                <div class="w-8 h-8 rounded-full bg-[#0077B6] flex items-center justify-center mr-3">
+
+              <div class="flex items-center p-4 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-[#3D1E6D] flex items-center justify-center mr-4">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
                 </div>
-                <span class="text-[#1E1E1E]">Adresse vérifiée</span>
+                <span class="text-gray-700">Licence commerciale vérifiée</span>
+              </div>
+
+              <div v-if="user.organizer.address" class="flex items-center p-4 bg-gray-50 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-[#3D1E6D] flex items-center justify-center mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+                <span class="text-gray-700">Adresse vérifiée</span>
               </div>
             </template>
           </div>
         </div>
 
         <!-- Section À propos -->
-        <div class="mb-4">
-          <h3 class="text-2xl font-bold text-[#3D1E6D] mb-4">À propos de vous</h3>
-          <div v-if="user.bio" class="text-[#1E1E1E] mb-4">
-            {{ user.bio }}
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <h3 class="text-xl font-bold text-[#3D1E6D] mb-6">À propos de vous</h3>
+          
+          <div v-if="user.dj?.bio || user.organizer?.bio" class="text-gray-700 leading-relaxed mb-6">
+            {{ user.dj?.bio || user.organizer?.bio }}
           </div>
-          <button v-else @click="openEditInfoModal" class="flex items-center text-[#0077B6] text-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Ajouter une minibio
-          </button>
 
-          <!-- Informations spécifiques DJ -->
           <template v-if="user.role === 'dj' && user.dj">
-            <div class="mt-4">
-              <h4 class="text-lg font-semibold text-[#3D1E6D] mb-2">Style musical</h4>
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-[#3D1E6D] mb-3">Genres musicaux</h4>
               <div class="flex flex-wrap gap-2">
-                <span class="px-3 py-1 bg-[#D9D9D9] rounded-full text-sm text-[#1E1E1E]">
-                  {{ user.dj.musicStyle }}
+                <span v-for="genre in genres" :key="genre" class="px-4 py-2 bg-gray-100 rounded-full text-sm text-gray-700">
+                  {{ genre }}
                 </span>
               </div>
             </div>
           </template>
 
-          <!-- Informations spécifiques Organisateur -->
           <template v-if="user.role === 'organisateur' && user.organizer">
-            <div class="mt-4">
-              <h4 class="text-lg font-semibold text-[#3D1E6D] mb-2">Type d'établissement</h4>
-              <p class="text-[#1E1E1E]">{{ user.organizer.establishmentType || 'Non spécifié' }}</p>
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-[#3D1E6D] mb-3">Type d'établissement</h4>
+              <p class="text-gray-700">{{ user.organizer.establishmentType || 'Non spécifié' }}</p>
             </div>
-            <div class="mt-4">
-              <h4 class="text-lg font-semibold text-[#3D1E6D] mb-2">Adresse</h4>
-              <p class="text-[#1E1E1E]">{{ user.organizer.address || 'Non spécifiée' }}</p>
+            <div class="mt-6">
+              <h4 class="text-lg font-semibold text-[#3D1E6D] mb-3">Adresse</h4>
+              <p class="text-gray-700">{{ user.organizer.address || 'Non spécifiée' }}</p>
             </div>
           </template>
         </div>
       </div>
 
-      <!-- Modaux -->
       <EditPhotoModal
         v-if="showEditPhotoModal"
         :show="showEditPhotoModal"
-        :current-photo="user?.profilePhoto"
+        :current-photo="profilePhotoUrl"
         :display-name="displayName"
         :user-type="user.role"
         @close="showEditPhotoModal = false"
@@ -174,12 +167,11 @@
       />
     </template>
 
-    <!-- Error state -->
     <div v-else class="flex flex-col items-center justify-center h-screen">
       <p class="text-red-500 mb-4">Une erreur est survenue lors du chargement du profil.</p>
       <button 
         @click="fetchUserData" 
-        class="px-4 py-2 bg-[#3D1E6D] text-white rounded hover:bg-[#0077B6]"
+        class="px-6 py-3 bg-[#3D1E6D] text-white rounded-lg hover:bg-[#2A1650] transition-colors"
       >
         Réessayer
       </button>
@@ -190,11 +182,10 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 import { useAuthStore } from '@/stores/auth_store'
-import EditPhotoModal from '@/components/modals/EditPhotoModal.vue'
-import EditInfoModal from '@/components/modals/EditInfoModal.vue'
-import { CheckIcon, PlusIcon } from '@heroicons/vue/solid'
+import EditPhotoModal from '@/components/modals/edit_photo_modal.vue'
+import EditInfoModal from '@/components/modals/edit_info_modal.vue'
 import type { User, ProfileFormData } from '@/types/user'
-import AvatarInitials from '@/components/common/AvatarInitials.vue'
+import AvatarInitials from '@/components/common/initials_avatar.vue'
 
 const authStore = useAuthStore()
 const defaultProfilePhoto = '/default-avatar.png'
@@ -213,7 +204,6 @@ const fetchUserData = async () => {
   }
 }
 
-// Computed properties
 const user = computed(() => authStore.user)
 
 const displayName = computed(() => {
@@ -230,15 +220,35 @@ const displayName = computed(() => {
   return 'Utilisateur'
 })
 
+const genres = computed(() => {
+  if (!user.value?.dj?.genres) return []
+  return user.value.dj.genres.split(',').map(genre => genre.trim())
+})
+
 const roleLabel = computed(() => {
   return user.value?.role === 'dj' ? 'DJ' : 'Organisation'
 })
 
 const profilePhotoUrl = computed(() => {
-  return user.value?.profilePhoto || defaultProfilePhoto
+  if (!user.value) return defaultProfilePhoto
+  
+  let photo = null
+  if (user.value.role === 'dj' && user.value.dj) {
+    photo = user.value.dj.profilePhoto
+  } else if (user.value.role === 'organisateur' && user.value.organizer) {
+    photo = user.value.organizer.profilePhoto
+  }
+  
+  if (!photo) return defaultProfilePhoto
+  
+  if (photo.startsWith('http')) {
+    return photo
+  }
+  
+  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3333'
+  return `${apiBaseUrl}${photo}`
 })
 
-// Event handlers
 const openEditPhotoModal = () => {
   showEditPhotoModal.value = true
 }
@@ -247,9 +257,9 @@ const openEditInfoModal = () => {
   showEditInfoModal.value = true
 }
 
-const handlePhotoUpdate = async (photo: File) => {
+const handlePhotoUpdate = async (photoUrl: string) => {
   try {
-    await authStore.updateProfilePhoto(photo)
+    await authStore.updateProfilePhoto(photoUrl)
     showEditPhotoModal.value = false
   } catch (error) {
     console.error('Erreur lors de la mise à jour de la photo:', error)

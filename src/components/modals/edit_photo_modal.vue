@@ -1,18 +1,18 @@
 <template>
   <Modal :show="show" @close="handleClose">
     <template #title>
-      Modifier la photo de profil
+      <h2 class="text-xl font-semibold text-gray-800">Modifier la photo de profil</h2>
     </template>
     
     <template #content>
-      <div class="space-y-4">
+      <div class="space-y-6">
         <div class="flex justify-center">
           <div class="relative group">
-            <template v-if="previewUrl || currentPhoto">
+            <template v-if="currentPhoto || previewUrl">
               <img
-                :src="previewUrl || currentPhoto"
+                :src="currentPhoto || previewUrl || ''"
                 alt="Aperçu de la photo"
-                class="w-32 h-32 rounded-full object-cover border-4 border-[#0077B6]"
+                class="w-36 h-36 rounded-full object-cover border-4 border-[#0077B6] shadow-lg transition-all duration-300 hover:shadow-xl"
               />
             </template>
             <template v-else>
@@ -20,13 +20,13 @@
                 :name="displayName"
                 size="lg"
                 :type="userType"
-                class="border-4 border-[#0077B6]"
+                class="w-36 h-36 border-4 border-[#0077B6] shadow-lg transition-all duration-300 hover:shadow-xl"
               />
             </template>
             <div 
-              class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity rounded-full"
+              class="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-black/40 to-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out rounded-full"
             >
-              <label class="cursor-pointer p-2 hover:scale-110 transition-transform">
+              <label class="cursor-pointer p-3 bg-white/20 rounded-full backdrop-blur-sm hover:scale-110 transition-transform duration-200">
                 <input
                   type="file"
                   class="hidden"
@@ -42,18 +42,41 @@
           </div>
         </div>
         
-        <div v-if="error" class="text-center">
-          <p class="text-red-500 text-sm">{{ error }}</p>
+        <div v-if="error" class="text-center animate-fade-in">
+          <p class="text-red-500 text-sm bg-red-50 py-2 px-4 rounded-lg">{{ error }}</p>
         </div>
         
-        <div class="text-sm text-gray-500 text-center space-y-1">
-          <p>Formats acceptés : JPG, PNG</p>
-          <p>Taille maximale : 2 Mo</p>
-          <p>Dimensions recommandées : 400x400 pixels</p>
+        <div class="bg-gray-50 p-4 rounded-lg space-y-2">
+          <h3 class="font-medium text-gray-700 mb-2">Spécifications de l'image</h3>
+          <div class="text-sm text-gray-600 space-y-1.5">
+            <p class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              Formats acceptés : JPG, PNG
+            </p>
+            <p class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Taille maximale : 2 Mo
+            </p>
+            <p class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+              </svg>
+              Dimensions recommandées : 400x400 pixels
+            </p>
+          </div>
         </div>
 
-        <div v-if="selectedFile" class="text-center text-sm text-gray-600">
-          Fichier sélectionné : {{ selectedFile.name }}
+        <div v-if="selectedFile" class="text-center">
+          <span class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ selectedFile.name }}
+          </span>
         </div>
       </div>
     </template>
@@ -61,7 +84,7 @@
     <template #actions>
       <button
         type="button"
-        class="inline-flex justify-center rounded-md border border-transparent bg-[#0077B6] px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-[#3D1E6D] focus:outline-none focus:ring-2 focus:ring-[#0077B6] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="inline-flex justify-center rounded-lg border border-transparent bg-gradient-to-r from-[#0077B6] to-[#0096C7] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:from-[#0096C7] hover:to-[#0077B6] focus:outline-none focus:ring-2 focus:ring-[#0077B6] focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         :disabled="!selectedFile || isUploading"
         @click="handleUpload"
       >
@@ -82,8 +105,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-import Modal from '@/components/modals/Modal.vue'
-import AvatarInitials from '@/components/common/AvatarInitials.vue'
+import Modal from '@/components/modals/modal.vue'
+import AvatarInitials from '@/components/common/initials_avatar.vue'
 import { UploadService } from '@/services/upload.service'
 
 const props = defineProps<{
@@ -164,8 +187,21 @@ const handleUpload = async () => {
   uploadProgress.value = 0
   
   try {
-    const { url } = await UploadService.uploadProfilePhoto(selectedFile.value)
-    emit('update', url)
+    const response = await UploadService.uploadProfilePhoto(selectedFile.value)
+    
+    // Extraire l'URL de la photo de la réponse
+    let photoUrl = null
+    if (props.userType === 'dj' && response.dj?.profilePhoto) {
+      photoUrl = response.dj.profilePhoto
+    } else if (props.userType === 'organisateur' && response.organizer?.profilePhoto) {
+      photoUrl = response.organizer.profilePhoto
+    }
+
+    if (!photoUrl) {
+      throw new Error('URL de la photo non reçue')
+    }
+    
+    emit('update', photoUrl)
     handleClose()
   } catch (err: any) {
     error.value = err.message || 'Une erreur est survenue lors de l\'envoi de la photo.'
